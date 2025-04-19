@@ -1,0 +1,344 @@
+<div class="container mt-5" *ngIf="loading.service">
+  <div class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando detalles del servicio...</p>
+  </div>
+</div>
+
+<div class="container mt-5" *ngIf="error.service">
+  <div class="alert alert-warning" *ngIf="error.service.includes('inicio de sesión')">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h4 class="alert-heading"><i class="fas fa-lock me-2"></i>Acceso restringido</h4>
+        <p>{{ error.service }}</p>
+        <p class="mb-0">Para ver todos los detalles de este servicio, por favor inicia sesión o regístrate.</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+          <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+        </button>
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+          <i class="fas fa-user-plus me-1"></i> Registrarse
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="!error.service.includes('inicio de sesión')">
+    {{ error.service }}
+  </div>
+</div>
+
+<div class="container mt-5" *ngIf="service && !loading.service">
+  <!-- Banner de vista previa limitada -->
+  <div class="alert alert-info mb-4" *ngIf="service.isPreview">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h4 class="alert-heading"><i class="fas fa-eye me-2"></i>Vista previa limitada</h4>
+        <p>Estás viendo una versión limitada de este servicio. Para acceder a toda la información, incluyendo datos de contacto y poder dejar reseñas, por favor inicia sesión.</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+          <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
+        </button>
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+          <i class="fas fa-user-plus me-1"></i> Registrarse
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="['/gallery']" [queryParams]="{category: service.category?._id || service.category}">{{ service.category?.name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page" id="service-name-breadcrumb">{{ service.name }}</li>
+    </ol>
+  </nav>
+
+  <!-- Service Header -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="main-image-container">
+        <img [src]="mainImage" class="img-fluid rounded" [alt]="service.name" id="main-service-image" title="Imagen principal del servicio">
+      </div>
+      <div class="row mt-3" id="image-thumbnails" *ngIf="service.images && service.images.length > 0">
+        <div class="col-3 mb-3" *ngFor="let image of service.images">
+          <img [src]="image" class="img-fluid rounded thumbnail" [alt]="service.name" (click)="setMainImage(image)" title="Imagen del servicio">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="service-info">
+        <h1 id="service-name">{{ service.name }}</h1>
+        <div class="service-rating">
+          <div id="rating-stars" [innerHTML]="generateStarRating(service.rating)"></div>
+          <span id="rating-value">{{ service.rating?.toFixed(1) }}</span>
+          <span id="rating-count">({{ service.reviewCount }} opiniones)</span>
+        </div>
+        <span class="badge bg-primary mt-3" id="category-badge">{{ service.category?.name }}</span>
+        <p class="mt-3" id="service-description">{{ service.longDescription || service.description }}</p>
+        <div class="service-contact">
+          <h4>Información de Contacto</h4>
+          <p><i class="fas fa-map-marker-alt"></i> <span id="service-location">{{ service.location }}</span></p>
+
+          <!-- Información de contacto sensible -->
+          <ng-container *ngIf="!service.isPreview; else previewContact">
+            <p><i class="fas fa-phone"></i> <span id="service-phone">{{ service.phone }}</span></p>
+            <p><i class="fas fa-envelope"></i> <span id="service-email">{{ service.email }}</span></p>
+            <p *ngIf="service.website">
+              <i class="fas fa-globe"></i>
+              <a [href]="'https://' + service.website" target="_blank" id="service-website">{{ service.website }}</a>
+            </p>
+          </ng-container>
+
+          <!-- Template para vista previa -->
+          <ng-template #previewContact>
+            <p><i class="fas fa-phone"></i> <span class="text-muted">Inicia sesión para ver el teléfono</span></p>
+            <p><i class="fas fa-envelope"></i> <span class="text-muted">Inicia sesión para ver el correo</span></p>
+            <p *ngIf="service.website">
+              <i class="fas fa-globe"></i>
+              <span class="text-muted">Inicia sesión para ver el sitio web</span>
+            </p>
+            <div class="mt-3">
+              <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <i class="fas fa-unlock-alt me-1"></i> Desbloquear información de contacto
+              </button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content and Details -->
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Schedule -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><i class="far fa-clock me-2"></i>Horario de Atención</h3>
+        </div>
+        <div class="card-body">
+          <div id="service-schedule" *ngIf="service.schedule">
+            <div class="row schedule-row" *ngFor="let item of service.schedule | keyvalue">
+              <div class="col-md-3 day">{{ getDayName(item.key) }}</div>
+              <div class="col-md-9 hours">{{ item.value }}</div>
+            </div>
+          </div>
+          <p *ngIf="!service.schedule">No hay información sobre horarios disponible.</p>
+        </div>
+      </div>
+
+      <!-- Services Offered -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><i class="fas fa-tools me-2"></i>Servicios Ofrecidos</h3>
+        </div>
+        <div class="card-body">
+          <div class="row" id="service-list" *ngIf="service.services && service.services.length > 0">
+            <div class="col-md-6 mb-3" *ngFor="let specificService of service.services">
+              <div class="service-item p-3 rounded">
+                <h5>{{ specificService.name }}</h5>
+                <p>{{ specificService.description }}</p>
+                <div class="price">{{ specificService.price }}</div>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="!service.services || service.services.length === 0">No hay información sobre servicios específicos disponible.</p>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><i class="far fa-comment-alt me-2"></i>Opiniones</h3>
+        </div>
+        <div class="card-body">
+          <div class="overall-rating mb-4">
+            <div class="stars" [innerHTML]="generateStarRating(service.rating)"></div>
+            <span class="rating-value">{{ service.rating?.toFixed(1) }}</span>
+            <span class="total-reviews">{{ service.reviewCount }} opiniones</span>
+          </div>
+
+          <!-- Review Form -->
+          <div class="review-form mb-4">
+            <h4>Deja tu opinión</h4>
+
+            <div *ngIf="service.isPreview" class="alert alert-warning">
+              <i class="fas fa-info-circle me-2"></i>
+              Para poder dejar una reseña, primero debes iniciar sesión.
+              <div class="mt-2">
+                <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                  Iniciar Sesión
+                </button>
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                  Registrarse
+                </button>
+              </div>
+            </div>
+
+            <ng-container *ngIf="!service.isPreview">
+              <div *ngIf="success.review" class="alert alert-success">
+                ¡Gracias por tu opinión! Ha sido publicada con éxito.
+              </div>
+              <div *ngIf="error.review" class="alert alert-danger">
+                {{ error.review }}
+              </div>
+              <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="review-name" class="form-label">Nombre</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="review-name"
+                      formControlName="name"
+                      [ngClass]="{'is-invalid': isFieldValid('name')}"
+                    >
+                    <div *ngIf="isFieldValid('name')" class="invalid-feedback">
+                      {{ getErrorMessage('name') }}
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="review-email" class="form-label">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="review-email"
+                      formControlName="email"
+                      [ngClass]="{'is-invalid': isFieldValid('email')}"
+                    >
+                    <div *ngIf="isFieldValid('email')" class="invalid-feedback">
+                      {{ getErrorMessage('email') }}
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Calificación</label>
+                  <div class="rating-select"
+                        [ngClass]="{'is-invalid': isFieldValid('rating')}">
+                    <i class="far fa-star"
+                        *ngFor="let star of [1,2,3,4,5]"
+                        (click)="setRating(star)"
+                        (mouseenter)="highlightStars(star)"
+                        (mouseleave)="highlightStars(rating)"></i>
+                  </div>
+                  <div *ngIf="isFieldValid('rating')" class="invalid-feedback">
+                    {{ getErrorMessage('rating') }}
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="review-comment" class="form-label">Comentario</label>
+                  <textarea
+                    class="form-control"
+                    id="review-comment"
+                    rows="3"
+                    formControlName="comment"
+                    [ngClass]="{'is-invalid': isFieldValid('comment')}"
+                  ></textarea>
+                  <div *ngIf="isFieldValid('comment')" class="invalid-feedback">
+                    {{ getErrorMessage('comment') }}
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="loading.review"
+                >
+                  <span *ngIf="loading.review" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ loading.review ? 'Enviando...' : 'Enviar Opinión' }}
+                </button>
+              </form>
+            </ng-container>
+          </div>
+
+          <!-- Reviews List -->
+          <div id="reviews-container">
+            <div class="review-item p-3 mb-3" *ngFor="let review of service.reviews">
+              <div class="d-flex justify-content-between">
+                <div class="reviewer-info">
+                  <h5 class="reviewer-name">{{ review.name }}</h5>
+                  <div class="review-date">{{ review.date | date:'d MMMM, yyyy' }}</div>
+                </div>
+                <div class="review-rating" [innerHTML]="generateStarRating(review.rating)"></div>
+              </div>
+              <p class="review-text mt-2">{{ review.comment }}</p>
+            </div>
+            <p *ngIf="!service.reviews || service.reviews.length === 0" class="text-center">
+              No hay opiniones disponibles. ¡Sé el primero en opinar!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Related Services -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><i class="fas fa-link me-2"></i>Servicios Relacionados</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading.related" class="text-center">
+            <div class="spinner-border spinner-border-sm" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+
+          <div *ngIf="error.related" class="alert alert-danger">
+            {{ error.related }}
+          </div>
+
+          <div class="related-services" *ngIf="relatedServices.length > 0 && !loading.related">
+            <div class="related-service-item mb-3" *ngFor="let relatedService of relatedServices">
+              <div class="d-flex">
+                <img [src]="relatedService.mainImage || 'assets/img/service-placeholder.jpg'" class="img-fluid me-3 rounded related-thumbnail" [alt]="relatedService.name" title="Imagen del servicio">
+                <div>
+                  <h5>{{ relatedService.name }}</h5>
+                  <div class="rating mb-1" [innerHTML]="generateStarRating(relatedService.rating)"></div>
+                  <a [routerLink]="['/detail', relatedService.id]" class="btn btn-sm btn-outline-primary">Ver detalles</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p *ngIf="relatedServices.length === 0 && !loading.related && !error.related" class="text-center">
+            No hay servicios relacionados disponibles.
+          </p>
+        </div>
+      </div>
+
+      <!-- Contact CTA -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><i class="fas fa-phone-alt me-2"></i>Contactar</h3>
+        </div>
+        <div class="card-body text-center">
+          <p>¿Interesado en este servicio? ¡Contacta ahora!</p>
+
+          <ng-container *ngIf="!service.isPreview; else previewContactButtons">
+            <a [href]="'tel:' + service.phone" class="btn btn-success mb-2 w-100">
+              <i class="fas fa-phone-alt me-2"></i>Llamar
+            </a>
+            <a [href]="'mailto:' + service.email" class="btn btn-primary w-100">
+              <i class="fas fa-envelope me-2"></i>Enviar Email
+            </a>
+          </ng-container>
+
+          <ng-template #previewContactButtons>
+            <div class="alert alert-info">
+              Para poder contactar con este proveedor, primero debes iniciar sesión.
+            </div>
+            <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <i class="fas fa-unlock-alt me-2"></i>Iniciar sesión para contactar
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

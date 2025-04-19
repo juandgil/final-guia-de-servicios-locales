@@ -1,0 +1,150 @@
+<!-- Hero Section -->
+<header class="hero-section">
+  <div class="container text-center">
+    <h1>Encuentra los mejores servicios locales</h1>
+    <p class="lead">Conectamos a personas con profesionales de confianza en tu comunidad</p>
+    <div class="search-container">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="¿Qué servicio necesitas?"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="search()"
+        >
+        <button class="btn btn-search" type="button" (click)="search()">Buscar</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Featured Services Section -->
+<section class="featured-services py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">Servicios Destacados</h2>
+
+    <div *ngIf="loading.services" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <div *ngIf="error.services" class="alert alert-danger">
+      {{ error.services }}
+    </div>
+
+    <div *ngIf="featuredServices.length > 0" class="row">
+      <div *ngFor="let service of featuredServices" class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img [src]="service.mainImage || 'assets/img/service-placeholder.jpg'" class="card-img-top" [alt]="service.name || 'Imagen del servicio'" [title]="service.name || 'Imagen del servicio'">
+          <div class="card-body">
+            <h5 class="card-title">{{ service.name }}</h5>
+            <div class="card-rating mb-2" [innerHTML]="generateStarRating(service.rating || 0)"></div>
+            <p class="card-text">{{ service.description }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> {{ service.location }}</small>
+            <a [routerLink]="['/detail', service.id]" class="btn btn-sm btn-outline-primary">Ver detalles</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="featuredServices.length === 0 && !loading.services && !error.services" class="col-12 text-center">
+      <p>No hay servicios destacados disponibles en este momento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">Explora por Categorías</h2>
+
+    <div *ngIf="loading.categories" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <div *ngIf="error.categories" class="alert alert-danger">
+      {{ error.categories }}
+    </div>
+
+    <div class="row">
+      <div *ngFor="let category of categories" class="col-md-3 col-sm-6 mb-4">
+        <div class="category-card">
+          <div class="category-icon">
+            <i [class]="category.icon"></i>
+          </div>
+          <h4>{{ category.name }}</h4>
+          <p>Profesionales verificados listos para ayudarte.</p>
+          <a [routerLink]="['/gallery']" [queryParams]="{category: category.id}" class="btn btn-sm btn-outline-primary">Ver servicios</a>
+        </div>
+      </div>
+
+      <div *ngIf="categories.length === 0 && !loading.categories && !error.categories" class="col-12 text-center">
+        <p>No hay categorías disponibles en este momento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">Opiniones de Clientes</h2>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="testimonial-card">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Encontré un excelente electricista cerca de mi casa. Trabajo de calidad y precio justo."</p>
+          <p class="testimonial-author">- María Rodríguez</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="testimonial-card">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <p class="testimonial-text">"El mecánico que contraté a través de esta plataforma arregló mi coche en tiempo récord."</p>
+          <p class="testimonial-author">- Carlos Mendoza</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="testimonial-card">
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Gracias a esta guía encontré una banda musical para la boda de mi hija. ¡Fue espectacular!"</p>
+          <p class="testimonial-author">- Ana Torres</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5">
+  <div class="container text-center">
+    <h2>¿Ofreces algún servicio?</h2>
+    <p class="lead mb-4">Regístrate y conecta con clientes en tu área</p>
+    <button class="btn btn-cta" data-bs-toggle="modal" data-bs-target="#registerModal">
+      <i class="fas fa-plus-circle me-2"></i>Registrar mi Servicio
+    </button>
+  </div>
+</section>

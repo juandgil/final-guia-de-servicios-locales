@@ -1,0 +1,48 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">Guía Local</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Alternar navegación">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/gallery" routerLinkActive="active">Galería</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active">Sobre Nosotros</a>
+        </li>
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <a class="nav-link btn-register" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Registrarse</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn && isProvider">
+          <a class="nav-link btn-register" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Registrar Servicio</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="isLoggedIn">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle me-1"></i> {{ userName }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="/profile"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+            <li *ngIf="isProvider"><a class="dropdown-item" routerLink="/provider/services"><i class="fas fa-briefcase me-2"></i>Mis Servicios</a></li>
+            <li *ngIf="isAdmin"><a class="dropdown-item" routerLink="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Panel Admin</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" (click)="logout($event)"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+          </ul>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link btn-logout" href="#" (click)="logout($event)">
+            <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

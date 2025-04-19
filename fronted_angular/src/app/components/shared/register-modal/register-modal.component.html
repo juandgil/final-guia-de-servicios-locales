@@ -1,0 +1,199 @@
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isLoggedIn ? 'Registra tu Servicio' : (showUserForm ? 'Regístrate' : 'Opciones de Registro') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Mensaje de éxito -->
+        <div *ngIf="success" class="alert alert-success">
+          <i class="fas fa-check-circle me-2"></i>
+          {{ isLoggedIn ? '¡Gracias por registrar tu servicio! Pronto será revisado por nuestro equipo.' : '¡Registro exitoso! Ya puedes iniciar sesión con tus credenciales.' }}
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="error" class="alert alert-danger">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          {{ error }}
+        </div>
+
+        <!-- Contenido para usuarios no logueados -->
+        <div *ngIf="!isLoggedIn">
+          <!-- Pantalla de botones si no se muestra el formulario -->
+          <div *ngIf="!showUserForm" class="text-center py-3">
+            <h4 class="mb-4">¿Qué deseas hacer?</h4>
+            <div class="d-grid gap-3">
+              <button class="btn btn-primary btn-lg" (click)="toggleUserForm(true)">
+                <i class="fas fa-user-plus me-2"></i>Crear una cuenta
+              </button>
+              <button class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">
+                <i class="fas fa-sign-in-alt me-2"></i>Iniciar sesión
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulario de registro de usuario -->
+          <form *ngIf="showUserForm" [formGroup]="userRegisterForm" (ngSubmit)="onUserSubmit()">
+            <div class="mb-3">
+              <label for="registerName" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="registerName" formControlName="name"
+                     [ngClass]="{'is-invalid': isUserFieldValid('name')}">
+              <div *ngIf="isUserFieldValid('name')" class="invalid-feedback">
+                {{ getUserErrorMessage('name') }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="registerEmail" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="registerEmail" formControlName="email"
+                     [ngClass]="{'is-invalid': isUserFieldValid('email')}">
+              <div *ngIf="isUserFieldValid('email')" class="invalid-feedback">
+                {{ getUserErrorMessage('email') }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="registerPassword" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="registerPassword" formControlName="password"
+                     [ngClass]="{'is-invalid': isUserFieldValid('password')}">
+              <div *ngIf="isUserFieldValid('password')" class="invalid-feedback">
+                {{ getUserErrorMessage('password') }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de usuario</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" formControlName="role" id="roleClient" value="user">
+                <label class="form-check-label" for="roleClient">
+                  Cliente
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" formControlName="role" id="roleProvider" value="provider">
+                <label class="form-check-label" for="roleProvider">
+                  Proveedor de servicios
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="userTerms" formControlName="terms"
+                     [ngClass]="{'is-invalid': isUserFieldValid('terms')}">
+              <label class="form-check-label" for="userTerms">Acepto los términos y condiciones</label>
+              <div *ngIf="isUserFieldValid('terms')" class="invalid-feedback">
+                Debes aceptar los términos y condiciones para continuar.
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Registrarse
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="toggleUserForm(false)">
+                Volver a opciones
+              </button>
+            </div>
+
+            <div class="text-center mt-3">
+              <small>¿Ya tienes una cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Inicia sesión</a></small>
+            </div>
+          </form>
+        </div>
+
+        <!-- Formulario de registro de servicio para proveedores autenticados -->
+        <form *ngIf="isLoggedIn && isProvider && !userHasService" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="businessName" class="form-label">Nombre del negocio</label>
+            <input type="text" class="form-control" id="businessName" formControlName="businessName"
+                   [ngClass]="{'is-invalid': isFieldValid('businessName')}">
+            <div *ngIf="isFieldValid('businessName')" class="invalid-feedback">
+              {{ getErrorMessage('businessName') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label">Categoría</label>
+            <select class="form-select" id="category" formControlName="category"
+                    [ngClass]="{'is-invalid': isFieldValid('category')}">
+              <option value="">Selecciona una categoría</option>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            <div *ngIf="isFieldValid('category')" class="invalid-feedback">
+              {{ getErrorMessage('category') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea class="form-control" id="description" rows="3" formControlName="description"
+                      [ngClass]="{'is-invalid': isFieldValid('description')}"></textarea>
+            <div *ngIf="isFieldValid('description')" class="invalid-feedback">
+              {{ getErrorMessage('description') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico de contacto</label>
+            <input type="email" class="form-control" id="email" formControlName="email"
+                   [ngClass]="{'is-invalid': isFieldValid('email')}">
+            <div *ngIf="isFieldValid('email')" class="invalid-feedback">
+              {{ getErrorMessage('email') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label">Teléfono de contacto</label>
+            <input type="text" class="form-control" id="phone" formControlName="phone"
+                   [ngClass]="{'is-invalid': isFieldValid('phone')}">
+            <div *ngIf="isFieldValid('phone')" class="invalid-feedback">
+              {{ getErrorMessage('phone') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="serviceImage" class="form-label">Imagen del servicio</label>
+            <input type="file" class="form-control" id="serviceImage" (change)="onFileSelected($event)" accept="image/*">
+            <small class="text-muted d-block mt-1">Selecciona una imagen representativa de tu servicio (máx. 5MB)</small>
+
+            <!-- Mostrar previsualización de la imagen -->
+            <div *ngIf="imagePreview" class="image-preview-container mt-3">
+              <img [src]="imagePreview" class="image-preview" alt="Vista previa de la imagen">
+            </div>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="terms" formControlName="terms"
+                   [ngClass]="{'is-invalid': isFieldValid('terms')}">
+            <label class="form-check-label" for="terms">Acepto los términos y condiciones</label>
+            <div *ngIf="isFieldValid('terms')" class="invalid-feedback">
+              Debes aceptar los términos y condiciones para continuar.
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Registrar servicio
+            </button>
+          </div>
+        </form>
+
+        <!-- Mensaje si el usuario ya tiene un servicio registrado -->
+        <div *ngIf="isLoggedIn && isProvider && userHasService" class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Ya tienes un servicio registrado en nuestra plataforma. Si deseas modificar información, dirígete a tu perfil.
+        </div>
+
+        <!-- Mensaje si el usuario no es proveedor -->
+        <div *ngIf="isLoggedIn && !isProvider" class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Solo los proveedores de servicios pueden registrar servicios. Si deseas convertirte en proveedor, contacta con administración.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

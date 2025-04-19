@@ -1,0 +1,264 @@
+/* Estilos para el componente de la página de inicio */
+
+/* Hero Section con búsqueda */
+.hero-section {
+  position: relative;
+  padding: 8rem 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(78, 115, 223, 0.9) 0%, rgba(55, 91, 209, 0.9) 100%), url('/assets/img/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-section h1 {
+  font-size: 3.25rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-section .lead {
+  font-size: 1.35rem;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+/* Barra de búsqueda */
+.search-container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.search-container .input-group {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.search-container .form-control {
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  height: 60px;
+}
+
+.search-container .form-control:focus {
+  box-shadow: none;
+}
+
+.search-container .btn-search {
+  background-color: var(--accent-color);
+  color: white;
+  font-weight: 600;
+  padding: 0 2rem;
+  border: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.search-container .btn-search:hover {
+  background-color: #e67e22;
+  transform: translateY(-1px);
+}
+
+/* Featured Services */
+.featured-services {
+  background-color: white;
+  padding: 5rem 0;
+}
+
+.featured-services .card {
+  transition: all 0.3s ease;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.featured-services .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.featured-services .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.featured-services .card-footer {
+  background-color: transparent;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+}
+
+/* Categories Section */
+.categories-section {
+  background-color: var(--light-gray);
+  padding: 5rem 0;
+}
+
+.category-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: var(--primary-light);
+  color: white;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+  transform: scale(1.1);
+}
+
+/* Call to Action Section */
+.cta-section {
+  background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(52, 73, 94, 0.9) 100%), url('/assets/img/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.cta-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.cta-section p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.btn-cta {
+  background-color: var(--accent-color);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 2.5rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-cta:hover {
+  background-color: #e67e22;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive styles */
+@media (max-width: 991.98px) {
+  .hero-section {
+    padding: 6rem 0;
+  }
+
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+
+  .search-container .form-control,
+  .search-container .btn-search {
+    font-size: 1rem;
+    height: 50px;
+  }
+
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hero-section {
+    padding: 5rem 0;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-section .lead {
+    font-size: 1.15rem;
+  }
+
+  .search-container .form-control {
+    border-radius: 0.25rem;
+  }
+
+  .search-container .input-group {
+    border-radius: 0.25rem;
+    flex-direction: column;
+  }
+
+  .search-container .btn-search {
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .featured-services,
+  .categories-section,
+  .cta-section {
+    padding: 3rem 0;
+  }
+}

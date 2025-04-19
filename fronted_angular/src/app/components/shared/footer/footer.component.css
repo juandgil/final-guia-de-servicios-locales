@@ -1,0 +1,14 @@
+/* Estilos específicos para el footer */
+.footer h5 {
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
+.social-icons a {
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: var(--primary-color);
+  transform: translateY(-3px);
+}
