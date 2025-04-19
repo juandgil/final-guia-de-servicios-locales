@@ -1,0 +1,85 @@
+@baseUrl = http://localhost:5000/api/v1
+@token = {{login.response.body.token}}
+@serviceId = {{createService.response.body.data._id}}
+
+# Primero debes ejecutar auth.http para obtener un token
+
+### Obtener todos los servicios
+GET {{baseUrl}}/services
+
+### Obtener servicios por categoría
+GET {{baseUrl}}/services?category=restaurante
+
+### Buscar servicios
+GET {{baseUrl}}/services/search?query=café
+
+### Obtener servicios destacados
+GET {{baseUrl}}/services/featured
+
+### Obtener un servicio por ID
+GET {{baseUrl}}/services/SERVICE_ID_AQUÍ
+
+### Crear un nuevo servicio (requiere autenticación)
+# @name createService
+POST {{baseUrl}}/services
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Mi Negocio de Prueba",
+  "description": "Una descripción detallada del negocio",
+  "category": "restaurante",
+  "address": {
+    "street": "Calle Principal 123",
+    "city": "Madrid",
+    "state": "Madrid",
+    "zipCode": "28001",
+    "country": "España"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [-3.703790, 40.416775]
+  },
+  "contact": {
+    "phone": "123456789",
+    "email": "negocio@ejemplo.com",
+    "website": "https://ejemplo.com"
+  },
+  "schedule": [
+    {
+      "day": "Lunes",
+      "open": "09:00",
+      "close": "18:00"
+    },
+    {
+      "day": "Martes",
+      "open": "09:00",
+      "close": "18:00"
+    }
+  ],
+  "services": ["Desayunos", "Comidas", "Cenas"],
+  "featuredService": true
+}
+
+### Actualizar un servicio (requiere ser propietario)
+PATCH {{baseUrl}}/services/{{serviceId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Mi Negocio Actualizado",
+  "description": "Descripción actualizada del negocio"
+}
+
+### Subir imágenes para un servicio (requiere ser propietario)
+# Usar un cliente como Postman o Insomnia para pruebas de archivos
+# POST {{baseUrl}}/services/{{serviceId}}/images
+# Authorization: Bearer {{token}}
+
+### Eliminar un servicio (requiere ser propietario)
+DELETE {{baseUrl}}/services/{{serviceId}}
+Authorization: Bearer {{token}}
+
+### Obtener servicios propios (requiere autenticación)
+GET {{baseUrl}}/services/my-services
+Authorization: Bearer {{token}} 

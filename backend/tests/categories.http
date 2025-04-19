@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:5000/api/v1
+@token = {{loginAdmin.response.body.token}}
+@categoryId = {{createCategory.response.body.data._id}}
+
+# Primero debes ejecutar auth.http para obtener un token de administrador
+
+### Obtener todas las categorías
+GET {{baseUrl}}/categories
+
+### Obtener una categoría por ID
+GET {{baseUrl}}/categories/CATEGORY_ID_AQUÍ
+
+### Crear una nueva categoría (requiere ser administrador)
+# @name createCategory
+POST {{baseUrl}}/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Nueva Categoría",
+  "description": "Descripción de la nueva categoría",
+  "icon": "fa-store"
+}
+
+### Actualizar una categoría (requiere ser administrador)
+PATCH {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Categoría Actualizada",
+  "description": "Descripción actualizada"
+}
+
+### Eliminar una categoría (requiere ser administrador)
+DELETE {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{token}} 

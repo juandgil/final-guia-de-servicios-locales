@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:5000/api/v1
+
+### Para obtener un token válido, ejecutar primero en auth.http:
+# 1. Registro (register)
+# 2. Inicio de sesión (login)
+
+# @name getServiceReviews
+GET {{baseUrl}}/services/{{serviceId}}/reviews
+
+### Obtener una reseña específica
+GET {{baseUrl}}/services/{{serviceId}}/reviews/REVIEW_ID_AQUÍ
+
+### Crear una nueva reseña (requiere autenticación)
+# @name createReview
+POST {{baseUrl}}/services/{{serviceId}}/reviews
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "rating": 4.5,
+  "comment": "Excelente servicio, muy recomendado!",
+  "title": "Gran experiencia"
+}
+
+### Actualizar una reseña (solo el propietario puede hacerlo)
+PATCH {{baseUrl}}/services/{{serviceId}}/reviews/{{reviewId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Actualización: ¡Aún mejor de lo que pensaba!"
+}
+
+### Eliminar una reseña (solo el propietario o admin puede hacerlo)
+DELETE {{baseUrl}}/services/{{serviceId}}/reviews/{{reviewId}}
+Authorization: Bearer {{auth_token}}
+
+### Obtener mis reseñas (requiere autenticación)
+GET {{baseUrl}}/reviews/me
+Authorization: Bearer {{auth_token}}
+
+@serviceId = YOUR_SERVICE_ID_HERE
+@reviewId = {{createReview.response.body.data._id}}
+@auth_token = PEGUE_SU_TOKEN_AQUÍ_DESPUÉS_DE_INICIAR_SESIÓN 

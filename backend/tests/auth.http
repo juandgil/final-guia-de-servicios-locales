@@ -1,0 +1,93 @@
+@baseUrl = http://localhost:5000/api/v1
+
+### Registro de usuario
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Usuario Prueba",
+  "email": "usuario@test.com",
+  "password": "Password123!",
+  "role": "user"
+}
+
+### Inicio de sesión (usuario normal)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario@test.com",
+  "password": "Password123!"
+}
+
+### crea usuario administrador
+# @name registerAdmin
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Administrador Prueba", 
+  "email": "admin@admin.com",
+  "password": "AdminPass123!",
+  "role": "admin"
+}
+
+
+### Inicio de sesión (administrador)
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "AdminPass123!"
+}
+
+### Obtener perfil de usuario actual normal
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### Obtener perfil de usuario actual administrador
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### Actualizar detalles de usuario
+PATCH {{baseUrl}}/auth/updatedetails
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "name": "Nombre Actualizado",
+  "email": "actualizado@test.com"
+}
+
+### Actualizar contraseña
+PATCH {{baseUrl}}/auth/updatepassword
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password123!",
+  "newPassword": "NuevaPassword456!"
+}
+
+### Solicitar restablecimiento de contraseña
+POST {{baseUrl}}/auth/forgotpassword
+Content-Type: application/json
+
+{
+  "email": "usuario@test.com"
+}
+
+### Restablecer contraseña (requiere token de restablecimiento)
+PUT {{baseUrl}}/auth/resetpassword/RESET_TOKEN_AQUÍ
+Content-Type: application/json
+
+{
+  "password": "NuevaPassword789!"
+}
+
+### Cerrar sesión
+GET {{baseUrl}}/auth/logout 
