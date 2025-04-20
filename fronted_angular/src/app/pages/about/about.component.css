@@ -1,0 +1,213 @@
+/* Estilos específicos para la página Sobre Nosotros */
+
+.about-header {
+  background: linear-gradient(135deg, rgba(78, 115, 223, 0.9) 0%, rgba(55, 91, 209, 0.9) 100%), url('/assets/img/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 4rem 0;
+  color: white;
+  text-align: center;
+}
+
+.about-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.about-section {
+  background-color: white;
+}
+
+.about-image {
+  box-shadow: var(--box-shadow);
+}
+
+.check-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.check-list li {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 0.5rem;
+}
+
+.check-list li::before {
+  content: '\f00c';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+}
+
+.mission-section {
+  background-color: var(--light-gray);
+}
+
+.mission-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: var(--transition);
+  height: 100%;
+}
+
+.mission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow);
+}
+
+.mission-card .icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--primary-light);
+  color: white;
+  border-radius: 50%;
+  font-size: 1.5rem;
+}
+
+.team-section {
+  background-color: white;
+}
+
+.team-member {
+  background-color: var(--light-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.team-member:hover {
+  box-shadow: var(--box-shadow);
+}
+
+.member-image img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 5px solid white;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.member-name {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.member-role {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.stats-section {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.contact-section {
+  background-color: white;
+}
+
+.contact-info {
+  background-color: var(--light-color);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+}
+
+.contact-item i {
+  width: 30px;
+  margin-right: 10px;
+  color: var(--primary-color);
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  margin-right: 10px;
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.social-icon:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+}
+
+.faq-section {
+  background-color: var(--light-gray);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+}
+
+/* Mapa responsivo */
+.map-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.map-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .about-header {
+    padding: 3rem 0;
+  }
+
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 1rem;
+  }
+}

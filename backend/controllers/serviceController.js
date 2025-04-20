@@ -3,6 +3,8 @@ const Category = require('../models/categoryModel');
 const { AppError } = require('../middleware/errorMiddleware');
 const { uploadMultipleImages, resizeMultipleImages, uploadSingleImage, resizeImage } = require('../middleware/uploadMiddleware');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 
 // Middleware para subir imágenes del servicio
 exports.uploadServiceImages = uploadMultipleImages('images', 5);
@@ -268,6 +270,26 @@ exports.createService = async (req, res, next) => {
     // Establecer imagen principal si hay imágenes
     if (req.body.images && req.body.images.length > 0) {
       req.body.mainImage = req.body.images[0];
+      
+      // Copiar la imagen al directorio de assets del frontend
+      const frontendImagesDir = path.join(__dirname, '../..', 'fronted_angular/src/assets/img');
+      if (!fs.existsSync(frontendImagesDir)) {
+        fs.mkdirSync(frontendImagesDir, { recursive: true });
+      }
+      
+      // Extraer el nombre de archivo de la ruta
+      const filename = path.basename(req.body.mainImage);
+      const sourcePath = path.join(__dirname, '..', req.body.mainImage);
+      const targetPath = path.join(frontendImagesDir, filename);
+      
+      // Copiar la imagen si existe
+      if (fs.existsSync(sourcePath)) {
+        fs.copyFileSync(sourcePath, targetPath);
+        
+        // Actualizar la ruta para que apunte a assets/img en el frontend
+        req.body.mainImage = `/assets/img/${filename}`;
+        req.body.images[0] = `/assets/img/${filename}`;
+      }
     }
     
     const newService = await Service.create(req.body);

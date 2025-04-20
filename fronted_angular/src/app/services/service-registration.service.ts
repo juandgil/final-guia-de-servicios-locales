@@ -22,7 +22,7 @@ export class ServiceRegistrationService {
 
     // Agregar todos los campos del formulario
     Object.keys(service).forEach(key => {
-      if (key !== 'serviceImage') {
+      if (key !== 'serviceImage' && key !== 'terms') {
         formData.append(key, service[key]);
       }
     });
@@ -30,6 +30,9 @@ export class ServiceRegistrationService {
     // Agregar la imagen si existe
     if (service.serviceImage) {
       formData.append('serviceImage', service.serviceImage, service.serviceImage.name);
+    } else {
+      // Si no hay imagen, usar una imagen por defecto
+      formData.append('mainImage', '/assets/img/imagen_default.webp');
     }
 
     return this.http.post(this.apiUrl, formData)

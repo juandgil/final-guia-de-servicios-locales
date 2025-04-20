@@ -79,9 +79,10 @@ export class RegisterModalComponent implements OnInit {
   private createForms(): void {
     // Formulario para registro de servicio
     this.registerForm = this.fb.group({
-      businessName: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       category: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(20)]],
+      location: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       serviceImage: [''],
@@ -150,6 +151,20 @@ export class RegisterModalComponent implements OnInit {
           this.registerForm.reset({terms: false});
           this.selectedFile = null;
           this.imagePreview = null;
+
+          // Mostrar alerta de éxito y cerrar modal después de 2 segundos
+          setTimeout(() => {
+            alert('Servicio registrado exitosamente');
+
+            // Cerrar el modal
+            const modalElement = document.getElementById('registerModal');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+          }, 2000);
         },
         (error: any) => {
           this.loading = false;
@@ -180,7 +195,19 @@ export class RegisterModalComponent implements OnInit {
         this.success = true;
         this.userRegisterForm.reset({ role: 'user', terms: false });
 
-        // Opcional: redirigir o mostrar mensaje adicional
+        // Esperar 2 segundos, mostrar alerta y cerrar modal
+        setTimeout(() => {
+          alert('Usuario registrado exitosamente');
+
+          // Cerrar el modal
+          const modalElement = document.getElementById('registerModal');
+          if (modalElement) {
+            const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+              modal.hide();
+            }
+          }
+        }, 2000);
       },
       (error) => {
         this.loading = false;

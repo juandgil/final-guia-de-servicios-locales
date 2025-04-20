@@ -80,6 +80,28 @@ exports.resizeMultipleImages = (options) => async (req, res, next) => {
     directory = 'uploads',
   } = options;
 
+  // Verificar si tenemos una sola imagen (para compatibilidad con serviceImage)
+  if (req.file) {
+    const filename = `${fieldName}-${Date.now()}.${format}`;
+    const dir = path.join(__dirname, '..', directory);
+    
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    
+    const filepath = path.join(dir, filename);
+    
+    await sharp(req.file.buffer)
+      .resize(width, height, { fit: 'cover' })
+      .toFormat(format)
+      .jpeg({ quality })
+      .toFile(filepath);
+    
+    req.body.images = [`/${directory}/${filename}`];
+    req.body.mainImage = `/${directory}/${filename}`;
+    return next();
+  }
+
   if (!req.files || !req.files.length) return next();
 
   // Crear el directorio si no existe

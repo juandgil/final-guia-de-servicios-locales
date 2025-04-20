@@ -107,11 +107,11 @@
         <!-- Formulario de registro de servicio para proveedores autenticados -->
         <form *ngIf="isLoggedIn && isProvider && !userHasService" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label for="businessName" class="form-label">Nombre del negocio</label>
-            <input type="text" class="form-control" id="businessName" formControlName="businessName"
-                   [ngClass]="{'is-invalid': isFieldValid('businessName')}">
-            <div *ngIf="isFieldValid('businessName')" class="invalid-feedback">
-              {{ getErrorMessage('businessName') }}
+            <label for="name" class="form-label">Nombre del negocio</label>
+            <input type="text" class="form-control" id="name" formControlName="name"
+                   [ngClass]="{'is-invalid': isFieldValid('name')}">
+            <div *ngIf="isFieldValid('name')" class="invalid-feedback">
+              {{ getErrorMessage('name') }}
             </div>
           </div>
 
@@ -133,6 +133,15 @@
                       [ngClass]="{'is-invalid': isFieldValid('description')}"></textarea>
             <div *ngIf="isFieldValid('description')" class="invalid-feedback">
               {{ getErrorMessage('description') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="location" class="form-label">Ubicación</label>
+            <input type="text" class="form-control" id="location" formControlName="location"
+                   [ngClass]="{'is-invalid': isFieldValid('location')}">
+            <div *ngIf="isFieldValid('location')" class="invalid-feedback">
+              {{ getErrorMessage('location') }}
             </div>
           </div>
 

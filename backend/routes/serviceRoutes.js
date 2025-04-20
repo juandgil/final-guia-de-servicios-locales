@@ -14,6 +14,7 @@ const {
   getMyServices
 } = require('../controllers/serviceController');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
+const { uploadSingleImage } = require('../middleware/uploadMiddleware');
 const reviewRouter = require('./reviewRoutes');
 
 // Redireccionar a las rutas de reseñas
@@ -37,7 +38,7 @@ router.get('/:id', getService);
 // Rutas para proveedores de servicios
 router.post('/', 
   restrictTo('provider', 'admin'),
-  uploadServiceImages,
+  uploadSingleImage('serviceImage'),
   resizeServiceImages,
   createService
 );
