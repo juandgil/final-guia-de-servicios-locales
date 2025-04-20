@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceService } from '../../services/service.service';
 import { ReviewService } from '../../services/review.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -38,6 +38,7 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private serviceService: ServiceService,
     private reviewService: ReviewService,
     private authService: AuthService,
@@ -54,6 +55,21 @@ export class DetailComponent implements OnInit {
     } else {
       this.error.service = 'No se especificó un servicio';
     }
+
+    // Suscribirse a cambios en los parámetros de la ruta para recargar cuando cambie el ID
+    this.route.paramMap.subscribe(params => {
+      const newServiceId = params.get('id') || '';
+      if (newServiceId && newServiceId !== this.serviceId) {
+        this.serviceId = newServiceId;
+        this.loadServiceDetail();
+        this.initReviewForm();
+      }
+    });
+  }
+
+  // Método para navegar a otro servicio desde la misma página
+  navigateToService(serviceId: string): void {
+    this.router.navigate(['/detail', serviceId]);
   }
 
   loadServiceDetail(): void {
@@ -63,9 +79,9 @@ export class DetailComponent implements OnInit {
     // Primero verificamos si hay un servicio en el caché
     const cachedPreview = this.serviceService.getServicePreviewFromCache(this.serviceId);
 
-    // Si hay un servicio en caché y no estamos autenticados, mostramos la vista previa
-    if (cachedPreview && !this.authService.isLoggedIn) {
-      console.log('Usando versión de vista previa desde caché');
+    // Si hay un servicio en caché, lo mostramos inmediatamente mientras cargamos los detalles completos
+    if (cachedPreview) {
+      console.log('Usando versión de vista previa desde caché inicialmente');
       this.service = cachedPreview;
       this.mainImage = cachedPreview.mainImage || cachedPreview.images?.[0] || 'assets/img/service-placeholder.jpg';
 
@@ -76,12 +92,9 @@ export class DetailComponent implements OnInit {
       if (cachedPreview.category) {
         this.loadRelatedServices(this.serviceId, cachedPreview.category?._id || cachedPreview.category);
       }
-
-      this.loading.service = false;
-      return;
     }
 
-    // Si no hay vista previa o el usuario está autenticado, procedemos normalmente
+    // Intentamos cargar los detalles completos del servicio
     this.serviceService.getServiceById(this.serviceId).subscribe({
       next: (service: any) => {
         this.service = service;
@@ -92,13 +105,22 @@ export class DetailComponent implements OnInit {
         // Establecer imagen principal
         this.mainImage = service.mainImage || service.images?.[0] || 'assets/img/service-placeholder.jpg';
 
-        // Cargar servicios relacionados
-        this.loadRelatedServices(service.id, service.category?._id || service.category);
+        // Cargar servicios relacionados si no lo hemos hecho antes
+        if (!cachedPreview || !cachedPreview.category) {
+          this.loadRelatedServices(service.id, service.category?._id || service.category);
+        }
 
         this.loading.service = false;
       },
       error: (err: any) => {
         console.error('Error loading service:', err);
+
+        // Si tenemos una versión en caché, la mantenemos y mostramos un mensaje menos alarmante
+        if (cachedPreview) {
+          console.log('Manteniendo versión en caché tras error');
+          this.loading.service = false;
+          return;
+        }
 
         // Mensaje de error más descriptivo dependiendo del tipo de error
         if (err.status === 401 || err.status === 403) {
@@ -239,9 +261,12 @@ export class DetailComponent implements OnInit {
    * @param rating Calificación (1-5)
    * @returns String seguro con el HTML de las estrellas
    */
-  generateStarRating(rating: number) {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
+  generateStarRating(rating: number | undefined | null) {
+    // Si rating es undefined o null, establecer a 0
+    const actualRating = rating ?? 0;
+
+    const fullStars = Math.floor(actualRating);
+    const halfStar = actualRating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
     let starsHTML = '';

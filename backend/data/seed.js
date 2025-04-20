@@ -163,22 +163,22 @@ async function seedDatabase() {
           {
             name: "Instalación eléctrica residencial",
             description: "Instalación completa para hogares nuevos o renovaciones.",
-            price: "Desde $150"
+            price: "Desde $150.000"
           },
           {
             name: "Reparación de averías",
             description: "Solución rápida para problemas eléctricos en el hogar o negocio.",
-            price: "Desde $50"
+            price: "Desde $50.000"
           },
           {
             name: "Instalación de iluminación",
             description: "Diseño e instalación de sistemas de iluminación personalizados.",
-            price: "Desde $80"
+            price: "Desde $80.000"
           },
           {
             name: "Automatización del hogar",
             description: "Instalación de sistemas inteligentes y control por voz o app.",
-            price: "Desde $200"
+            price: "Desde $200.000"
           }
         ],
         featured: true,
@@ -209,22 +209,22 @@ async function seedDatabase() {
           {
             name: "Mantenimiento preventivo",
             description: "Cambio de aceite, filtros, revisión general del vehículo.",
-            price: "Desde $80"
+            price: "Desde $80.000"
           },
           {
             name: "Diagnóstico computarizado",
             description: "Detección de fallas con equipo especializado.",
-            price: "Desde $40"
+            price: "Desde $40.000"
           },
           {
             name: "Reparación de frenos",
             description: "Cambio de pastillas, discos, ajustes y más.",
-            price: "Desde $100"
+            price: "Desde $100.000"
           },
           {
             name: "Servicio a domicilio",
             description: "Atención donde te encuentres para emergencias.",
-            price: "Desde $60"
+            price: "Desde $60.000"
           }
         ],
         featured: true,
@@ -255,22 +255,22 @@ async function seedDatabase() {
           {
             name: "Bodas y ceremonias",
             description: "Música en vivo para ceremonias y recepción de bodas.",
-            price: "Desde $500"
+            price: "Desde $500.000"
           },
           {
             name: "Fiestas corporativas",
             description: "Amenización de eventos empresariales con repertorio adaptado.",
-            price: "Desde $450"
+            price: "Desde $450.000"
           },
           {
             name: "Cumpleaños y aniversarios",
             description: "Celebraciones especiales con música personalizada.",
-            price: "Desde $400"
+            price: "Desde $400.000"
           },
           {
             name: "Paquete completo",
             description: "Incluye sonido, iluminación y 4 horas de música en vivo.",
-            price: "Desde $600"
+            price: "Desde $600.000"
           }
         ],
         featured: true,
@@ -301,22 +301,22 @@ async function seedDatabase() {
           {
             name: "Reparación de fugas",
             description: "Detección y arreglo de fugas de agua en tuberías.",
-            price: "Desde $60"
+            price: "Desde $60.000"
           },
           {
             name: "Destape de drenajes",
             description: "Solución para tuberías obstruidas en baños, cocinas, etc.",
-            price: "Desde $50"
+            price: "Desde $50.000"
           },
           {
             name: "Instalación de sanitarios",
             description: "Instalación de inodoros, lavabos, regaderas, etc.",
-            price: "Desde $80"
+            price: "Desde $80.000"
           },
           {
             name: "Servicio de emergencia",
             description: "Atención inmediata 24/7 para problemas urgentes.",
-            price: "Desde $100"
+            price: "Desde $100.000"
           }
         ],
         featured: false,
@@ -330,6 +330,7 @@ async function seedDatabase() {
 
     // Crear reseñas de ejemplo
     const reviews = [
+      // Reseñas para Electricista Profesional (5 estrellas promedio)
       {
         service: createdServices[0]._id, // Electricista Profesional
         user: createdUsers[1]._id, // Usuario Prueba
@@ -342,32 +343,102 @@ async function seedDatabase() {
         service: createdServices[0]._id, // Electricista Profesional
         user: createdUsers[3]._id, // María García
         name: "Laura Gómez",
-        rating: 4,
-        comment: "Muy buen trabajo, resolvió todos los problemas eléctricos que tenía en casa. Puntual y profesional. Le quito una estrella porque tardó un poco más de lo previsto.",
+        rating: 5,
+        comment: "Muy buen trabajo, resolvió todos los problemas eléctricos que tenía en casa. Puntual y profesional. Excelente atención.",
         approved: true
       },
       {
+        service: createdServices[0]._id, // Electricista Profesional
+        user: createdUsers[0]._id, // Admin
+        name: "Jorge Ramírez",
+        rating: 5,
+        comment: "Sin duda el mejor electricista que he contratado. Resolvió un problema complejo que otros no pudieron solucionar.",
+        approved: true
+      },
+      
+      // Reseñas para Mecánico Automotriz (4 estrellas promedio)
+      {
         service: createdServices[1]._id, // Mecánico Automotriz Express
         user: createdUsers[1]._id, // Usuario Prueba
-        name: "Roberto Sánchez",
         rating: 5,
+        name: "Roberto Sánchez",
         comment: "Me salvaron de una emergencia en la carretera. Llegaron rápido y solucionaron el problema de forma eficiente. Excelente servicio.",
         approved: true
       },
       {
+        service: createdServices[1]._id, // Mecánico Automotriz Express
+        user: createdUsers[3]._id, // María García
+        name: "Elena Torres",
+        rating: 4,
+        comment: "Buen servicio, pero tardaron un poco más de lo prometido. El trabajo quedó bien hecho y el precio fue justo.",
+        approved: true
+      },
+      {
+        service: createdServices[1]._id, // Mecánico Automotriz Express
+        user: createdUsers[0]._id, // Admin
+        name: "Miguel Ángel Díaz",
+        rating: 3,
+        comment: "Hace bien su trabajo, pero podría mejorar en cuanto a puntualidad y limpieza del área de trabajo.",
+        approved: true
+      },
+      
+      // Reseñas para Banda Musical (3 estrellas promedio)
+      {
         service: createdServices[2]._id, // Banda Musical Los Fenix
         user: createdUsers[1]._id, // Usuario Prueba
         name: "Ana Torres",
-        rating: 5,
-        comment: "Gracias a esta banda, la boda de mi hija fue un éxito total. Todos los invitados quedaron encantados y bailaron toda la noche. ¡100% recomendados!",
+        rating: 4,
+        comment: "La banda cumplió con nuestras expectativas. Buena música y profesionales.",
         approved: true
       },
+      {
+        service: createdServices[2]._id, // Banda Musical Los Fenix
+        user: createdUsers[0]._id, // Admin
+        name: "Pedro Vázquez",
+        rating: 2,
+        comment: "Llegaron tarde a nuestro evento y el sonido no era de la mejor calidad. El repertorio fue limitado.",
+        approved: true
+      },
+      {
+        service: createdServices[2]._id, // Banda Musical Los Fenix
+        user: createdUsers[2]._id, // Juan Pérez
+        name: "Gabriela Moreno",
+        rating: 3,
+        comment: "Música aceptable, pero falta mejor organización y comunicación antes del evento.",
+        approved: true
+      },
+      
+      // Reseñas para Plomero (3.5 estrellas promedio)
       {
         service: createdServices[3]._id, // Plomero 24/7
         user: createdUsers[1]._id, // Usuario Prueba
         name: "Javier Morales",
         rating: 4,
         comment: "Servicio rápido y eficiente. Resolvieron mi problema de plomería sin complicaciones y a un buen precio.",
+        approved: true
+      },
+      {
+        service: createdServices[3]._id, // Plomero 24/7
+        user: createdUsers[0]._id, // Admin
+        name: "Sofía Castillo",
+        rating: 3,
+        comment: "El trabajo quedó bien, pero tuvieron que regresar a corregir algunos detalles. Precio razonable.",
+        approved: true
+      },
+      {
+        service: createdServices[3]._id, // Plomero 24/7
+        user: createdUsers[2]._id, // Juan Pérez
+        name: "Alejandro Ruiz",
+        rating: 5,
+        comment: "Excelente servicio de emergencia. Llegaron en menos de una hora y resolvieron una fuga complicada. 100% recomendados.",
+        approved: true
+      },
+      {
+        service: createdServices[3]._id, // Plomero 24/7
+        user: createdUsers[3]._id, // María García
+        name: "Daniel Castro",
+        rating: 2,
+        comment: "Precio elevado y el trabajo no quedó como esperaba. Tuve que llamar a otro plomero para corregir algunos problemas.",
         approved: true
       }
     ];

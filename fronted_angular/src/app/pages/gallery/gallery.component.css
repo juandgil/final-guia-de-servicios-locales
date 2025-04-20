@@ -1,0 +1,161 @@
+/* Estilos para la cabecera de la galería */
+.gallery-header {
+  background-color: var(--primary-color);
+  background-image: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 3rem 0;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  margin-bottom: 1.5rem;
+}
+
+.gallery-header h1 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.gallery-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Estilos para la sección de filtros */
+.filter-section {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 1.5rem;
+}
+
+.btn-search {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-search:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Estilos para la cuadrícula de servicios */
+.service-card .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.service-card .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.service-card .card-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.service-card .card-text {
+  color: var(--gray-color);
+  font-size: 0.9rem;
+}
+
+.service-card .card-footer {
+  background-color: transparent;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Categoría badge */
+.category-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Iconos de estrella para calificaciones */
+.rating .fas.fa-star {
+  color: var(--accent-color);
+}
+
+.rating .fas.fa-star-half-alt {
+  color: var(--accent-color);
+}
+
+/* Paginación personalizada */
+.pagination .page-link {
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  margin: 0 0.2rem;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.pagination .page-link:hover {
+  background-color: var(--light-gray);
+}
+
+/* Vista de lista */
+#gallery-container-list .card {
+  margin-bottom: 1rem;
+}
+
+#gallery-container-list .card-img-top {
+  height: 100%;
+  min-height: 180px;
+}
+
+/* Estilos para botones de vista */
+.btn-group .btn-outline-secondary {
+  padding: 0.3rem 0.6rem;
+}
+
+.btn-group .btn-outline-secondary.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+/* Responsividad */
+@media (max-width: 992px) {
+  .service-card .card-img-top {
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-header {
+    padding: 2rem 0;
+  }
+
+  .gallery-header h1 {
+    font-size: 2rem;
+  }
+
+  .service-card .card-img-top {
+    height: 160px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pagination .page-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

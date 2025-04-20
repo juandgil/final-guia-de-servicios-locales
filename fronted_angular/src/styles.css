@@ -203,6 +203,24 @@ a:hover {
     font-size: 0.9rem;
 }
 
+/* Estilos para las estrellas en todo el sitio */
+.fa-star, .fa-star-half-alt {
+    color: var(--accent-color);
+}
+
+/* Estrellas vacías */
+.far.fa-star {
+    color: #e9ecef;
+}
+
+/* Estilos específicos para estrellas en página de detalles */
+.overall-rating .stars .fa-star,
+.overall-rating .stars .fa-star-half-alt,
+.review-rating .fa-star,
+.review-rating .fa-star-half-alt {
+    color: var(--accent-color);
+}
+
 /* Categories Section */
 .categories-section {
     background-color: var(--light-gray);

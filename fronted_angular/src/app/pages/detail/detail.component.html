@@ -76,14 +76,14 @@
         <h1 id="service-name">{{ service.name }}</h1>
         <div class="service-rating">
           <div id="rating-stars" [innerHTML]="generateStarRating(service.rating)"></div>
-          <span id="rating-value">{{ service.rating?.toFixed(1) }}</span>
-          <span id="rating-count">({{ service.reviewCount }} opiniones)</span>
+          <span id="rating-value">{{ service.rating?.toFixed(1) || '0.0' }}</span>
+          <span id="rating-count">({{ service.reviewCount || 0 }} opiniones)</span>
         </div>
         <span class="badge bg-primary mt-3" id="category-badge">{{ service.category?.name }}</span>
         <p class="mt-3" id="service-description">{{ service.longDescription || service.description }}</p>
         <div class="service-contact">
           <h4>Información de Contacto</h4>
-          <p><i class="fas fa-map-marker-alt"></i> <span id="service-location">{{ service.location }}</span></p>
+          <p><i class="fas fa-map-marker-alt"></i> <span id="service-location"> {{ service.location }}</span></p>
 
           <!-- Información de contacto sensible -->
           <ng-container *ngIf="!service.isPreview; else previewContact">
@@ -97,11 +97,11 @@
 
           <!-- Template para vista previa -->
           <ng-template #previewContact>
-            <p><i class="fas fa-phone"></i> <span class="text-muted">Inicia sesión para ver el teléfono</span></p>
-            <p><i class="fas fa-envelope"></i> <span class="text-muted">Inicia sesión para ver el correo</span></p>
+            <p><i class="fas fa-phone"></i> <span class="text-muted"> Inicia sesión para ver el teléfono</span></p>
+            <p><i class="fas fa-envelope"></i> <span class="text-muted"> Inicia sesión para ver el correo</span></p>
             <p *ngIf="service.website">
               <i class="fas fa-globe"></i>
-              <span class="text-muted">Inicia sesión para ver el sitio web</span>
+              <span class="text-muted"> Inicia sesión para ver el sitio web</span>
             </p>
             <div class="mt-3">
               <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -160,8 +160,8 @@
         <div class="card-body">
           <div class="overall-rating mb-4">
             <div class="stars" [innerHTML]="generateStarRating(service.rating)"></div>
-            <span class="rating-value">{{ service.rating?.toFixed(1) }}</span>
-            <span class="total-reviews">{{ service.reviewCount }} opiniones</span>
+            <span class="rating-value">{{ service.rating?.toFixed(1) || '0.0' }}</span>
+            <span class="total-reviews">{{ service.reviewCount || 0 }} opiniones</span>
           </div>
 
           <!-- Review Form -->
@@ -300,7 +300,7 @@
                 <div>
                   <h5>{{ relatedService.name }}</h5>
                   <div class="rating mb-1" [innerHTML]="generateStarRating(relatedService.rating)"></div>
-                  <a [routerLink]="['/detail', relatedService.id]" class="btn btn-sm btn-outline-primary">Ver detalles</a>
+                  <button (click)="navigateToService(relatedService.id)" class="btn btn-sm btn-outline-primary">Ver detalles</button>
                 </div>
               </div>
             </div>

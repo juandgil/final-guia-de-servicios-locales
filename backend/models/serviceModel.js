@@ -85,6 +85,17 @@ const serviceSchema = new mongoose.Schema({
       required: true
     }
   }],
+  // Añadir el campo reviewStats para almacenar las estadísticas de las reseñas
+  reviewStats: {
+    avgRating: {
+      type: Number,
+      default: 0
+    },
+    count: {
+      type: Number,
+      default: 0
+    }
+  },
   featured: {
     type: Boolean,
     default: false

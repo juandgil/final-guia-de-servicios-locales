@@ -1,0 +1,173 @@
+<!-- Gallery Header -->
+<header class="gallery-header py-5">
+  <div class="container text-center">
+    <h1>Descubre Servicios Locales</h1>
+    <p class="lead">Explora nuestra galería de profesionales y servicios disponibles</p>
+  </div>
+</header>
+
+<!-- Filter Section -->
+<section class="filter-section py-4">
+  <div class="container">
+    <div class="row g-3 align-items-center">
+      <div class="col-md-2">
+        <h5>Filtrar por:</h5>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="category-filter" [(ngModel)]="currentCategory" (change)="applyFilters()" aria-label="Filtrar por categoría">
+          <option value="todos">Todas las categorías</option>
+          <option *ngFor="let category of categories" [value]="category._id">{{ category.name }}</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" id="rating-filter" [(ngModel)]="currentRating" (change)="applyFilters()" aria-label="Filtrar por calificación">
+          <option value="todos">Todas las calificaciones</option>
+          <option value="5">5 estrellas</option>
+          <option value="4">4+ estrellas</option>
+          <option value="3">3+ estrellas</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+          <input type="text" class="form-control" id="search-input" [(ngModel)]="searchQuery" placeholder="Buscar...">
+          <button class="btn btn-search" type="button" id="search-button" (click)="performSearch()" aria-label="Buscar">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100" (click)="resetFilters()" aria-label="Limpiar filtros">
+          <i class="fas fa-sync-alt me-2"></i>Limpiar filtros
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="gallery-grid py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h6 class="mb-0" id="results-count">
+            <ng-container *ngIf="searchQuery">
+              Mostrando resultados para "{{ searchQuery }}"
+            </ng-container>
+            <ng-container *ngIf="!searchQuery">
+              <ng-container *ngIf="currentCategory === 'todos'">
+                Mostrando todos los servicios
+              </ng-container>
+              <ng-container *ngIf="currentCategory !== 'todos'">
+                Mostrando servicios de {{ getCategoryName(currentCategory) }}
+              </ng-container>
+            </ng-container>
+          </h6>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === 'grid'" id="grid-view" (click)="setView('grid')" aria-label="Vista de cuadrícula">
+              <i class="fas fa-th"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === 'list'" id="list-view" (click)="setView('list')" aria-label="Vista de lista">
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div class="row" *ngIf="loading">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3">Cargando servicios...</p>
+      </div>
+    </div>
+
+    <!-- Mensaje sin resultados -->
+    <div class="row" *ngIf="!loading && (!services || services.length === 0)">
+      <div class="col-12 text-center py-5">
+        <p class="lead">No se encontraron servicios que coincidan con tu búsqueda.</p>
+        <button class="btn btn-primary" (click)="resetFilters()">Restablecer filtros</button>
+      </div>
+    </div>
+
+    <!-- Vista de cuadrícula -->
+    <div class="row" id="gallery-container" *ngIf="!loading && services && services.length > 0 && currentView === 'grid'">
+      <div class="col-md-4 mb-4 service-card" *ngFor="let service of services">
+        <div class="card h-100">
+          <img [src]="getServiceImage(service)" class="card-img-top" [alt]="service.name" title="{{service.name}}">
+          <div class="category-badge">{{ service.category?.name || getCategoryName(service.category) }}</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ service.name }}</h5>
+            <div class="rating mb-2">
+              <span *ngFor="let star of generateStars(service.reviewStats?.avgRating || 0)">
+                <i class="fas" [ngClass]="star"></i>
+              </span>
+              <span class="ms-1">{{ (service.reviewStats?.avgRating || 0).toFixed(1) }}</span>
+            </div>
+            <p class="card-text">{{ service.description | slice:0:150 }}{{ service.description.length > 150 ? '...' : '' }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> {{ service.location }}</small>
+            <button (click)="goToServiceDetail(service._id || service.id)" class="btn btn-sm btn-outline-primary">Ver detalles</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista de lista -->
+    <div class="row" id="gallery-container-list" *ngIf="!loading && services && services.length > 0 && currentView === 'list'">
+      <div class="col-12 mb-3 service-card" *ngFor="let service of services">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-md-3">
+              <img [src]="getServiceImage(service)" class="img-fluid rounded-start h-100 w-100" style="object-fit: cover;" [alt]="service.name" title="{{service.name}}">
+              <div class="category-badge">{{ service.category?.name || getCategoryName(service.category) }}</div>
+            </div>
+            <div class="col-md-9">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="card-title">{{ service.name }}</h5>
+                  <div class="rating">
+                    <span *ngFor="let star of generateStars(service.reviewStats?.avgRating || 0)">
+                      <i class="fas" [ngClass]="star"></i>
+                    </span>
+                    <span class="ms-1">{{ (service.reviewStats?.avgRating || 0).toFixed(1) }}</span>
+                  </div>
+                </div>
+                <p class="card-text">{{ service.description | slice:0:300 }}{{ service.description.length > 300 ? '...' : '' }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> {{ service.location }}</small>
+                  <button (click)="goToServiceDetail(service._id || service.id)" class="btn btn-sm btn-outline-primary">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="row mt-5" *ngIf="!loading && services && services.length > 0 && pagination?.totalPages > 1">
+      <div class="col-12">
+        <nav aria-label="Paginación de galería">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="pagination.page === 1">
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(pagination.page - 1)" tabindex="-1" [attr.aria-disabled]="pagination.page === 1">Anterior</a>
+            </li>
+            <ng-container *ngFor="let pageNumber of getPageRange()">
+              <li class="page-item" [class.active]="pageNumber === pagination.page">
+                <a class="page-link" href="javascript:void(0)" (click)="goToPage(pageNumber)">{{ pageNumber }}</a>
+              </li>
+            </ng-container>
+            <li class="page-item" [class.disabled]="pagination.page === pagination.totalPages">
+              <a class="page-link" href="javascript:void(0)" (click)="goToPage(pagination.page + 1)" [attr.aria-disabled]="pagination.page === pagination.totalPages">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>

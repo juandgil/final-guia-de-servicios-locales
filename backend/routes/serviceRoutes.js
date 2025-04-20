@@ -11,11 +11,13 @@ const {
   searchServices,
   uploadServiceImages,
   resizeServiceImages,
-  getMyServices
+  getMyServices,
+  getPublicService
 } = require('../controllers/serviceController');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
 const { uploadSingleImage } = require('../middleware/uploadMiddleware');
 const reviewRouter = require('./reviewRoutes');
+const Service = require('../models/serviceModel');
 
 // Redireccionar a las rutas de reseñas
 router.use('/:serviceId/reviews', reviewRouter);
@@ -25,6 +27,26 @@ router.get('/', getAllServices);
 router.get('/featured', getFeaturedServices);
 router.get('/category/:categoryId', getServicesByCategory);
 router.get('/search', searchServices);
+router.get('/:id/public', getPublicService);
+
+// Ruta temporal para recalcular estadísticas de reseñas
+router.get('/recalculate-stats', async (req, res) => {
+  try {
+    const services = await Service.find();
+    for (const service of services) {
+      await Service.calculateReviewStatistics(service._id);
+    }
+    res.status(200).json({
+      status: 'success',
+      message: 'Estadísticas de reseñas recalculadas correctamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
 
 // Rutas protegidas
 router.use(protect);

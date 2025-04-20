@@ -112,7 +112,3 @@ Para obtener información más detallada sobre cada componente del proyecto, con
 
 - [Documentación del Backend](./backend/README.md)
 - [Documentación del Frontend Angular](./fronted_angular/README.md)
-
-## Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT. 

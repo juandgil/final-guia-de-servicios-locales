@@ -24,6 +24,14 @@ exports.getAllServices = async (req, res, next) => {
     // Construir query base
     let filter = { active: true };
     
+    // Añadir filtro de calificación mínima si se proporciona
+    if (req.query.minRating) {
+      const minRating = parseFloat(req.query.minRating);
+      filter['reviewStats.avgRating'] = { $gte: minRating };
+      console.log('Aplicando filtro de rating mínimo:', minRating);
+      console.log('Filtro completo:', JSON.stringify(filter));
+    }
+    
     // Ordenar por featured primero, luego por rating
     const sort = { featured: -1, 'reviewStats.avgRating': -1 };
     
@@ -106,6 +114,12 @@ exports.getServicesByCategory = async (req, res, next) => {
     // Construir query base
     const filter = { category: categoryId, active: true };
     
+    // Añadir filtro de calificación mínima si se proporciona
+    if (req.query.minRating) {
+      const minRating = parseFloat(req.query.minRating);
+      filter['reviewStats.avgRating'] = { $gte: minRating };
+    }
+    
     // Ordenar por rating
     const sort = { 'reviewStats.avgRating': -1 };
     
@@ -146,27 +160,81 @@ exports.getServicesByCategory = async (req, res, next) => {
 // Buscar servicios
 exports.searchServices = async (req, res, next) => {
   try {
-    const { query } = req.query;
+    const { query, ignoreCase, ignoreAccents } = req.query;
     
     if (!query) {
       return next(new AppError('Por favor proporciona un término de búsqueda', 400));
     }
     
-    // Buscar por términos
-    const services = await Service.find({
+    // Función para crear un patrón de búsqueda que ignore acentos
+    const createAccentInsensitivePattern = (text) => {
+      // Mapeo bidireccional de caracteres con y sin acento
+      const accentPairs = [
+        ['a', 'á', 'à', 'ä', 'â', 'ã'],
+        ['e', 'é', 'è', 'ë', 'ê'],
+        ['i', 'í', 'ì', 'ï', 'î'],
+        ['o', 'ó', 'ò', 'ö', 'ô', 'õ'],
+        ['u', 'ú', 'ù', 'ü', 'û'],
+        ['n', 'ñ'],
+        ['c', 'ç']
+      ];
+      
+      // Crear un mapa para búsquedas rápidas
+      const charMap = {};
+      accentPairs.forEach(group => {
+        group.forEach(char => {
+          charMap[char.toLowerCase()] = group;
+        });
+      });
+      
+      // Convertir texto a formato de regex
+      const pattern = Array.from(text).map(char => {
+        const lowerChar = char.toLowerCase();
+        if (charMap[lowerChar]) {
+          // Si el carácter está en nuestro mapa, crear un grupo para todas sus variantes
+          const variants = charMap[lowerChar];
+          // Incluir versiones mayúsculas si el carácter original es mayúscula
+          if (char === char.toUpperCase()) {
+            return `[${variants.join('')}${variants.join('').toUpperCase()}]`;
+          }
+          return `[${variants.join('')}]`;
+        }
+        // Para otros caracteres, usar el original (escapado si es necesario)
+        return char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }).join('');
+      
+      return pattern;
+    };
+    
+    // Crear el patrón de búsqueda
+    const searchPattern = ignoreAccents === 'true' 
+      ? createAccentInsensitivePattern(query)
+      : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapar regex para búsqueda normal
+    
+    // Opciones de regex - 'i' para ignorar mayúsculas/minúsculas
+    const regexOptions = ignoreCase === 'true' ? 'i' : '';
+    
+    // Construir la consulta de búsqueda
+    let searchQuery = {
       $and: [
         { active: true },
         {
           $or: [
-            { name: { $regex: query, $options: 'i' } },
-            { description: { $regex: query, $options: 'i' } },
-            { longDescription: { $regex: query, $options: 'i' } }
+            { name: { $regex: searchPattern, $options: regexOptions } },
+            { description: { $regex: searchPattern, $options: regexOptions } },
+            { longDescription: { $regex: searchPattern, $options: regexOptions } }
           ]
         }
       ]
-    })
-    .sort({ 'reviewStats.avgRating': -1 })
-    .populate('provider', 'name');
+    };
+    
+    console.log('Patrón de búsqueda:', searchPattern);
+    
+    // Buscar servicios que coincidan con la consulta
+    const services = await Service.find(searchQuery)
+      .sort({ 'reviewStats.avgRating': -1 })
+      .populate('provider', 'name')
+      .populate('category', 'name icon');
     
     res.status(200).json({
       status: 'success',
@@ -203,6 +271,57 @@ exports.getService = async (req, res, next) => {
       status: 'success',
       data: {
         service
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Obtener una versión pública de un servicio sin requerir autenticación
+exports.getPublicService = async (req, res, next) => {
+  try {
+    const service = await Service.findById(req.params.id)
+      .populate('provider', 'name')
+      .populate('category', 'name icon');
+    
+    if (!service || !service.active) {
+      return next(new AppError('Servicio no encontrado', 404));
+    }
+    
+    // Crear una versión pública con información limitada
+    const publicService = {
+      id: service._id,
+      name: service.name,
+      description: service.description,
+      longDescription: service.longDescription,
+      category: service.category,
+      location: service.location,
+      mainImage: service.mainImage,
+      images: service.images,
+      // Convertir reviewStats a los nombres de propiedades que espera el frontend
+      rating: service.reviewStats?.avgRating || 0,
+      reviewCount: service.reviewStats?.quantity || 0,
+      reviewStats: service.reviewStats,
+      services: service.services,
+      schedule: service.schedule,
+      featured: service.featured,
+      // Añadir datos limitados del proveedor
+      provider: {
+        name: service.provider.name
+      },
+      // Información sensible reemplazada
+      phone: 'Inicia sesión para ver',
+      email: 'Inicia sesión para ver',
+      website: service.website,
+      contactInfo: 'Disponible al iniciar sesión',
+      isPreview: true
+    };
+    
+    res.status(200).json({
+      status: 'success',
+      data: {
+        service: publicService
       }
     });
   } catch (error) {

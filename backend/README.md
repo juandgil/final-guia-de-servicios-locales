@@ -96,7 +96,7 @@ use servicios-locales
 npm run seed
 ```
 
-## Datos de Ejemplo
+## IMPORTANTE Importar Datos de Ejemplo
 
 El script `seed.js` ubicado en `backend/data/` se utiliza para poblar la base de datos con información inicial:
 
