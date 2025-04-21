@@ -61,6 +61,13 @@ export class LoginModalComponent implements OnInit {
             const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
             if (modal) {
               modal.hide();
+
+              // Asegurarse de que el backdrop se elimina correctamente
+              setTimeout(() => {
+                document.body.classList.remove('modal-open');
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(backdrop => backdrop.remove());
+              }, 300);
             }
           }
           // Recargar la página para actualizar el estado de la autenticación

@@ -1,5 +1,6 @@
 {
   "name": "guia-servicios-locales",
+  "author": "juandavidgilalvarez@gmail.com",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

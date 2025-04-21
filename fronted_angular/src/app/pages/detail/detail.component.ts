@@ -76,6 +76,9 @@ export class DetailComponent implements OnInit {
     this.loading.service = true;
     this.error.service = '';
 
+    // Verificar si el usuario está autenticado
+    const userIsLoggedIn = this.authService.isLoggedIn();
+
     // Primero verificamos si hay un servicio en el caché
     const cachedPreview = this.serviceService.getServicePreviewFromCache(this.serviceId);
 
@@ -83,6 +86,12 @@ export class DetailComponent implements OnInit {
     if (cachedPreview) {
       console.log('Usando versión de vista previa desde caché inicialmente');
       this.service = cachedPreview;
+
+      // Si el usuario está autenticado, no mostrar como vista previa
+      if (userIsLoggedIn) {
+        this.service.isPreview = false;
+      }
+
       this.mainImage = cachedPreview.mainImage || cachedPreview.images?.[0] || 'assets/img/service-placeholder.jpg';
 
       // Actualizar título de la página
@@ -98,6 +107,11 @@ export class DetailComponent implements OnInit {
     this.serviceService.getServiceById(this.serviceId).subscribe({
       next: (service: any) => {
         this.service = service;
+
+        // Si el usuario está autenticado, no mostrar como vista previa
+        if (userIsLoggedIn) {
+          this.service.isPreview = false;
+        }
 
         // Actualizar título de la página
         document.title = `${service.name} - Guía de Servicios Locales`;
@@ -118,6 +132,12 @@ export class DetailComponent implements OnInit {
         // Si tenemos una versión en caché, la mantenemos y mostramos un mensaje menos alarmante
         if (cachedPreview) {
           console.log('Manteniendo versión en caché tras error');
+
+          // Si el usuario está autenticado, no mostrar como vista previa
+          if (userIsLoggedIn) {
+            this.service.isPreview = false;
+          }
+
           this.loading.service = false;
           return;
         }

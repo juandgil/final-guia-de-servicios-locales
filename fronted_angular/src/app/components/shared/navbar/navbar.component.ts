@@ -55,11 +55,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
         // Opcional: Mostrar mensaje de éxito
         // Aquí podrías usar un servicio de notificaciones si tienes uno
 
-        // Redirigir al inicio
+        // Redirigir al inicio y recargar la página
         this.router.navigate(['/']);
 
-        // Opcional: recargar la página para asegurar que todo se actualice
-        // setTimeout(() => window.location.reload(), 100);
+        // Recargar la página para asegurar que todo se actualice correctamente
+        setTimeout(() => window.location.reload(), 100);
       } catch (error) {
         console.error('Error al cerrar sesión:', error);
       }

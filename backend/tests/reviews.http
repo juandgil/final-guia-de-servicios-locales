@@ -4,6 +4,10 @@
 # 1. Registro (register)
 # 2. Inicio de sesión (login)
 
+### IMPORTANTE: Antes de ejecutar cualquier prueba, reemplace las siguientes variables manualmente:
+# - @serviceId = ID del servicio que desea probar
+# - @auth_token = Token obtenido después de iniciar sesión
+
 # @name getServiceReviews
 GET {{baseUrl}}/services/{{serviceId}}/reviews
 
@@ -40,6 +44,7 @@ Authorization: Bearer {{auth_token}}
 GET {{baseUrl}}/reviews/me
 Authorization: Bearer {{auth_token}}
 
-@serviceId = YOUR_SERVICE_ID_HERE
-@reviewId = {{createReview.response.body.data._id}}
-@auth_token = PEGUE_SU_TOKEN_AQUÍ_DESPUÉS_DE_INICIAR_SESIÓN 
+# IMPORTANTE: Estas variables deben ser reemplazadas manualmente antes de ejecutar las pruebas
+@serviceId = YOUR_SERVICE_ID_HERE  # Reemplace con un ID de servicio válido
+@reviewId = {{createReview.response.body.data._id}}  # Esta se autorrellena después de crear una reseña
+@auth_token = PEGUE_SU_TOKEN_AQUÍ_DESPUÉS_DE_INICIAR_SESIÓN  # Copie el token desde la respuesta de login 

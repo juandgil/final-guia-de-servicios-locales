@@ -156,14 +156,24 @@ export class RegisterModalComponent implements OnInit {
           setTimeout(() => {
             alert('Servicio registrado exitosamente');
 
-            // Cerrar el modal
+            // Cerrar el modal y limpiar el backdrop
             const modalElement = document.getElementById('registerModal');
             if (modalElement) {
               const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
               if (modal) {
                 modal.hide();
+
+                // Asegurarse de que el backdrop se elimina correctamente
+                setTimeout(() => {
+                  document.body.classList.remove('modal-open');
+                  const backdrops = document.querySelectorAll('.modal-backdrop');
+                  backdrops.forEach(backdrop => backdrop.remove());
+                }, 300);
               }
             }
+
+            // Opcional: recargar la página para actualizar
+            setTimeout(() => window.location.reload(), 500);
           }, 2000);
         },
         (error: any) => {
@@ -199,14 +209,24 @@ export class RegisterModalComponent implements OnInit {
         setTimeout(() => {
           alert('Usuario registrado exitosamente');
 
-          // Cerrar el modal
+          // Cerrar el modal y limpiar el backdrop
           const modalElement = document.getElementById('registerModal');
           if (modalElement) {
             const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
             if (modal) {
               modal.hide();
+
+              // Asegurarse de que el backdrop se elimina correctamente
+              setTimeout(() => {
+                document.body.classList.remove('modal-open');
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(backdrop => backdrop.remove());
+              }, 300);
             }
           }
+
+          // Recargar la página para actualizar el estado de la autenticación
+          setTimeout(() => window.location.reload(), 500);
         }, 2000);
       },
       (error) => {

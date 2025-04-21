@@ -87,11 +87,11 @@
 
           <!-- Información de contacto sensible -->
           <ng-container *ngIf="!service.isPreview; else previewContact">
-            <p><i class="fas fa-phone"></i> <span id="service-phone">{{ service.phone }}</span></p>
-            <p><i class="fas fa-envelope"></i> <span id="service-email">{{ service.email }}</span></p>
+            <p><i class="fas fa-phone"></i> <span id="service-phone"> {{ service.phone }}</span></p>
+            <p><i class="fas fa-envelope"></i> <span id="service-email"> {{ service.email }}</span></p>
             <p *ngIf="service.website">
               <i class="fas fa-globe"></i>
-              <a [href]="'https://' + service.website" target="_blank" id="service-website">{{ service.website }}</a>
+              <a [href]="'https://' + service.website" target="_blank" id="service-website"> {{ service.website }}</a>
             </p>
           </ng-container>
 
@@ -182,13 +182,17 @@
             </div>
 
             <ng-container *ngIf="!service.isPreview">
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Actualmente solo es posible realizar una reseña y calificación cuando tomes un servicio y recibas un correo electrónico de confirmación. Por el momento esta opción no está disponible. Gracias por tu comprensión.
+              </div>
               <div *ngIf="success.review" class="alert alert-success">
                 ¡Gracias por tu opinión! Ha sido publicada con éxito.
               </div>
               <div *ngIf="error.review" class="alert alert-danger">
                 {{ error.review }}
               </div>
-              <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+              <!-- <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="review-name" class="form-label">Nombre</label>
@@ -252,7 +256,7 @@
                   <span *ngIf="loading.review" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   {{ loading.review ? 'Enviando...' : 'Enviar Opinión' }}
                 </button>
-              </form>
+              </form> -->
             </ng-container>
           </div>
 

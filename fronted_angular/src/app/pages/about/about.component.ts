@@ -35,6 +35,13 @@ export class AboutComponent implements OnInit {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        // Mostrar alerta de función no disponible
+        this.showAlert('info', 'Esta opción todavía no está disponible. Gracias por tu comprensión.');
+
+        // Limpiar el formulario
+        (form as HTMLFormElement).reset();
+
+        /* Código comentado para futura implementación
         // Obtener los valores de los campos
         const nameInput = document.getElementById('name') as HTMLInputElement;
         const emailInput = document.getElementById('email') as HTMLInputElement;
@@ -67,6 +74,7 @@ export class AboutComponent implements OnInit {
 
         // Limpiar el formulario
         (form as HTMLFormElement).reset();
+        */
       });
     }, 500);
   }
@@ -133,7 +141,7 @@ export class AboutComponent implements OnInit {
   private showAlert(type: string, message: string): void {
     // Crear elemento de alerta
     const alertElement = document.createElement('div');
-    alertElement.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show mt-3`;
+    alertElement.className = `alert alert-${type === 'success' ? 'success' : type === 'info' ? 'info' : 'danger'} alert-dismissible fade show mt-3`;
     alertElement.setAttribute('role', 'alert');
 
     alertElement.innerHTML = `
