@@ -377,7 +377,7 @@ export class GalleryComponent implements OnInit {
     // Completar hasta 5 estrellas
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
-      stars.push('fa-star far'); // Usar 'far' para estrellas vacías
+      stars.push('fa-star far'); // 'far fa-star' es el orden correcto para estrellas vacías
     }
 
     return stars;

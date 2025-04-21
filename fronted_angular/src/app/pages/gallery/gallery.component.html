@@ -103,7 +103,8 @@
             <h5 class="card-title">{{ service.name }}</h5>
             <div class="rating mb-2">
               <span *ngFor="let star of generateStars(service.reviewStats?.avgRating || 0)">
-                <i class="fas" [ngClass]="star"></i>
+                <i class="fas" *ngIf="!star.includes('far')" [ngClass]="star"></i>
+                <i class="far" *ngIf="star.includes('far')" [ngClass]="'fa-star'"></i>
               </span>
               <span class="ms-1">{{ (service.reviewStats?.avgRating || 0).toFixed(1) }}</span>
             </div>
@@ -132,7 +133,8 @@
                   <h5 class="card-title">{{ service.name }}</h5>
                   <div class="rating">
                     <span *ngFor="let star of generateStars(service.reviewStats?.avgRating || 0)">
-                      <i class="fas" [ngClass]="star"></i>
+                      <i class="fas" *ngIf="!star.includes('far')" [ngClass]="star"></i>
+                      <i class="far" *ngIf="star.includes('far')" [ngClass]="'fa-star'"></i>
                     </span>
                     <span class="ms-1">{{ (service.reviewStats?.avgRating || 0).toFixed(1) }}</span>
                   </div>
