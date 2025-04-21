@@ -39,7 +39,7 @@ Backend del proyecto de servicios locales para gestionar categorías, servicios,
 ```
 NODE_ENV=development
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/servicios-locales
+MONGO_URI=mongodb://localhost:27017/guia_servicios_locales
 JWT_SECRET=tu_secreto_jwt
 JWT_EXPIRE=30d
 JWT_COOKIE_EXPIRE=30
